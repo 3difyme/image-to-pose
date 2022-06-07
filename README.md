@@ -35,9 +35,13 @@ Python Virtual Environment.
 pip install virtualenv
 ```
 - Clone this repository or download it directly from Github and unzip it.
+```
+git clone https://github.com/3difyme/image-to-pose.git
+```
 - Open a terminal in the root directory in the local repository and create and activate a 
     Python Virtual Environment to install necessary libraries.
 ```
+cd image-to-pose
 virtualenv <name-of-venv>
 <name-of-venv>\Scripts\Activate
 ```
@@ -72,6 +76,16 @@ MEDIAPIPE_OBJ_NAME=mediapipe_mesh.obj
 ``` 
 **Eg:**
 BLENDER_PATH=C:/Program Files/Blender Foundation/Blender 3.1/blender.exe
+
+## Run Locally
+
+Run the command in the virtual environment by replacing the arguments appropiately.
+```
+python main.py <IMG_PATH> <INPUT_FBX_PATH> <OUTPUT_FBX_PATH>
+```
+**NOTE:** There should be two additional files post execution with the following extensions:
+- `.obj` file: An intermediate Mediapipe mesh obtained in **Part 1** operation.
+- `.fbx` file: Final posed armature obtained in **Part 2** operation.
 
 ## Authors
 
