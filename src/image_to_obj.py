@@ -5,7 +5,7 @@ import numpy as np
 
 
 # conveting image to .obj file
-def image_to_obj(image: np.mat, obj_path: str) -> None:
+def create_obj(image: np.mat, obj_path: str) -> None:
 
     # mediapipe config
     mp_pose = mp.solutions.pose
@@ -35,6 +35,7 @@ def image_to_obj(image: np.mat, obj_path: str) -> None:
 
             vertices = {}
             _ = 1
+            
             # writing vertices
             with open(obj_path, 'w') as export:
                 export.write('o face\nmtllib face.mtl\n\n# Vertices\n')
@@ -63,4 +64,4 @@ if __name__ == "__main__":
     img_path, obj_path = sys.argv[1], sys.argv[2]
     img = cv.imread(img_path)
 
-    image_to_obj(img, obj_path)
+    create_obj(img, obj_path)

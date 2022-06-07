@@ -140,6 +140,8 @@ def armature_pose(import_fbx_path: str, export_fbx_path) -> None:
 
     # toggle to EDIT mode
     bpy.ops.object.mode_set(mode='EDIT')
+    # set face and neck
+    set_face()
     # set spine
     set_spine()
     # set limbs
@@ -148,8 +150,7 @@ def armature_pose(import_fbx_path: str, export_fbx_path) -> None:
     bpy.ops.object.mode_set(mode='POSE')
     # set hands
     set_hands()
-    # set face and neck
-    set_face()
+    
     # toggle to OBJECT mode
     bpy.ops.object.mode_set(mode='OBJECT')
 
