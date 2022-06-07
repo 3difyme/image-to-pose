@@ -8,9 +8,6 @@ if __name__ == '__main__':
     img_path, import_fbx_path, export_fbx_path = sys.argv[1], sys.argv[2], sys.argv[3]
     blender_path = os.getenv('BLENDER_PATH')
     obj_path = os.getenv('MEDIAPIPE_OBJ_NAME')
-    # path = 'C:\\Users\\Rupak\\Documents\\Study\\Placement\\Internship\\PixelHash\\Task-5\\'
-    # varpath = 'C:/Users/Rupak/Documents/Study/Placement/Internship/PixelHash/Task-5/'
-    # print(blender_path)
     
     os.system('python image_to_obj.py ' + img_path + ' ' + obj_path)
     print('++++ Part 1: Mediapipe mesh obtained from pose image')
