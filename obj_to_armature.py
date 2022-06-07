@@ -1,5 +1,4 @@
 import sys
-
 import bpy
 import numpy as np
 from mathutils import Matrix
@@ -23,6 +22,7 @@ SPINE = {
 
 # roll bone with the angle between 2 vectors
 def boneRoll(bone1_name: str, vector1: np.mat, vector2: np.mat, direction: int, axis: str) -> None:
+    
     unit_vector1 = vector1 / np.linalg.norm(vector1)
     unit_vector2 = vector2 / np.linalg.norm(vector2)
     dot_product = np.dot(unit_vector1, unit_vector2)
@@ -37,6 +37,7 @@ def boneRoll(bone1_name: str, vector1: np.mat, vector2: np.mat, direction: int, 
 
 # rotate bone to the given vector
 def rotateBone(bone_vector: np.mat, bone) -> None:
+    
     bone_vector = bone_vector / np.linalg.norm(bone_vector)     # get unit vector along bone_vector
     rotation = bone.vector.rotation_difference(bone_vector)
     M = (
@@ -49,6 +50,7 @@ def rotateBone(bone_vector: np.mat, bone) -> None:
 
 # set face and neck
 def setFace() -> None:
+    
     ob = bpy.context.active_object
     md_face_vector = (VERTICES[3] + VERTICES[6])/2 - (VERTICES[7] + VERTICES[8])/2
     right_shoulder_vector = np.array(ob.pose.bones['mixamorig:RightShoulder'].head - ob.pose.bones['mixamorig:Head'].head)
@@ -68,6 +70,7 @@ def setFace() -> None:
 
 # set spine
 def setSpine() -> None:
+    
     ob = bpy.context.active_object
     act_arm = bpy.context.object
 
@@ -82,6 +85,7 @@ def setSpine() -> None:
 
 # set arms, legs and feet
 def setLimbs() -> None:
+    
     ob = bpy.context.active_object
     act_arm = bpy.context.object
     
@@ -93,6 +97,7 @@ def setLimbs() -> None:
 
 
 def setHands() -> None:
+    
     ob = bpy.context.active_object
 
     # arm and wrist roll in left hand (note the order of vectors in cross product)
@@ -124,6 +129,7 @@ def setHands() -> None:
 
 # making pose from the given vertices
 def armaturePose(import_fbx_path: str, export_fbx_path) -> None:
+
     # delete all objects before importing
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='SELECT')
@@ -148,12 +154,12 @@ def armaturePose(import_fbx_path: str, export_fbx_path) -> None:
     bpy.ops.object.mode_set(mode='OBJECT')
 
     # export .fbx file
-    bpy.ops.export_scene.fbx(filepath = export_fbx_path)
+    bpy.ops.export_scene.fbx(filepath=export_fbx_path, add_leaf_bones=False)
 
 
 # driver code
 if __name__ == "__main__":
-    print('in main')
+    
     # get import path for .fbx file, export path for .fbx file and .obj file path
     fbx_path, export_path, obj_path = sys.argv[4], sys.argv[5], sys.argv[6]
     print(sys.argv)
@@ -161,16 +167,18 @@ if __name__ == "__main__":
 
     try:
         # read .obj file to get vertices
-        print('hi')
         with open(obj_path, 'r') as file:
             lines = file.readlines()
             for line in lines:
-                if line[0] == 'v':
+                flag = list(line.split(' '))[0]
+                if flag == 'v':
                     _, x, y, z = list(line.split(' '))
                     # store vertices as an numpy array
                     VERTICES[i][0], VERTICES[i][1], VERTICES[i][2] = x, y, z
                     i = i+1
-    except:
-        print('file not found')
 
-    armaturePose(fbx_path, export_path)
+        armaturePose(fbx_path, export_path)
+
+    except Exception as e: 
+        print('Exception Occurred!')
+        print(e)

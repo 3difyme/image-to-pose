@@ -13,10 +13,10 @@ programmed in [Python](https://www.python.org/) Language which involves invoking
 **NOTE:** This application is developed in a Windows Platform inside a 
 Python Virtual Environment. 
 
-**This program is split in two separate steps:**
+**This program is split in two separate operations:**
 - **Part 1:** Obtaining [Mediapipe](https://google.github.io/mediapipe/solutions/pose.html) Mesh
     in OBJ [Wavefront](https://en.wikipedia.org/wiki/Wavefront_.obj_file) format.
-- **Part 1:** Mapping the **posed** Mediapipe mesh (obtained in previous step) to [Mixamo](https://www.mixamo.com/) Armature.
+- **Part 2:** Mapping the **posed** Mediapipe mesh (obtained in previous step) to [Mixamo](https://www.mixamo.com/) Armature.
 
 ## Important Links
 
@@ -54,21 +54,24 @@ python-dotenv
 opencv-contrib-python==4.5.5.64
 mediapipe==0.8.10
 ```
-Incase you come across any issue while installing the above packages due to compatibility
-issues with the `protobuf` library, then downgrade it to a lower version.
+Incase you come across any issues while executing **Part 1** operation due to compatibility
+issues with the `protobuf` library, then downgrade it to a lower version in the virtual 
+environment.
 ```
-protobuf==3.20.0
+pip install protobuf==3.20
 ```
 
 ## Environment Variables
 
 To run this project, you will need to create a `.env` file in the current directory 
-    and update it with the following code below. Assign the path of your installed
-    Blender directory to `BLENDER_PATH` variable.
+    and update it with the following code below. Assign the value to 
+    `BLENDER_PATH` variable.
 ```
-BLENDER_PATH=<PATH_TO_YOUR_BLENDER_ROOT_DIRECTORY>
+BLENDER_PATH=<path_to_your_blender_exe_file>
+MEDIAPIPE_OBJ_NAME=mediapipe_mesh.obj
 ``` 
-**Eg:** BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.1
+**Eg:**
+BLENDER_PATH=C:/Program Files/Blender Foundation/Blender 3.1/blender.exe
 
 ## Authors
 

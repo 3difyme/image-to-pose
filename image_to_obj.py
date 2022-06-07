@@ -1,5 +1,4 @@
 import sys
-
 import cv2 as cv
 import mediapipe as mp
 import numpy as np
@@ -7,6 +6,7 @@ import numpy as np
 
 # conveting image to .obj file
 def image_to_obj(image: np.mat, obj_path: str) -> None:
+
     # mediapipe config
     mp_pose = mp.solutions.pose
     with mp_pose.Pose(
@@ -59,6 +59,7 @@ def image_to_obj(image: np.mat, obj_path: str) -> None:
 
 # driver code
 if __name__ == "__main__":
+    
     img_path, obj_path = sys.argv[1], sys.argv[2]
     img = cv.imread(img_path)
 

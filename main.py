@@ -1,26 +1,21 @@
 import os
 import sys
+from dotenv import load_dotenv
 
 if __name__ == '__main__':
+
+    load_dotenv()
     img_path, import_fbx_path, export_fbx_path = sys.argv[1], sys.argv[2], sys.argv[3]
-    obj_path = 'mediaPipe_mesh.obj'
-    path = 'C:\\Users\\Rupak\\Documents\\Study\\Placement\\Internship\\PixelHash\\Task-5\\'
-    varpath = 'C:/Users/Rupak/Documents/Study/Placement/Internship/PixelHash/Task-5/'
-    blender_path = 'blender.exe --background --python ' + 'task5b.py ' + import_fbx_path + ' ' + export_fbx_path + ' ' + obj_path
-    print(blender_path)
+    blender_path = os.getenv('BLENDER_PATH')
+    obj_path = os.getenv('MEDIAPIPE_OBJ_NAME')
+    # path = 'C:\\Users\\Rupak\\Documents\\Study\\Placement\\Internship\\PixelHash\\Task-5\\'
+    # varpath = 'C:/Users/Rupak/Documents/Study/Placement/Internship/PixelHash/Task-5/'
+    # print(blender_path)
     
-    os.system('python task5a.py ' + img_path + ' ' + obj_path)
-    print('5a done')
-    # print(os.getcwd())
-    os.system(blender_path)
-    print('5b done')
-    # try:
-    #     print("Inserting inside-", os.getcwd())
-    #     os.chdir('C:/Program Files/Blender Foundation/Blender 3.1/')
-    #     print(os.getcwd())
-    #     os.system(blender_path)
-    #     print('5b done')
-    # # Caching the exception    
-    # except:
-    #     print("Something wrong with specified directory. Exception- ")
-    #     print(sys.exc_info())
+    os.system('python image_to_obj.py ' + img_path + ' ' + obj_path)
+    print('++++ Part 1: Mediapipe mesh obtained from pose image')
+
+    blender_invoke_command = '"' + blender_path + '"' + ' --background --python ' + 'obj_to_armature.py ' + import_fbx_path + ' ' + export_fbx_path + ' ' + obj_path
+    print(blender_invoke_command)
+    os.system(blender_invoke_command)
+    print('++++ Part 2: Posed armature obtained from Mediapipe mesh.')
