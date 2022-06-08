@@ -5,18 +5,18 @@ from mathutils import Matrix
 
 VERTICES = np.zeros([33, 3])
 ARMS_LEGS_FOOT = {
-                'mixamorig:LeftShoulder': (12, 11), 'mixamorig:RightShoulder': (11, 12),
-                'mixamorig:LeftArm': (11, 13), 'mixamorig:RightArm': (12, 14),
-                'mixamorig:LeftForeArm': (13, 15), 'mixamorig:RightForeArm': (14, 16),
-                'mixamorig:LeftUpLeg' : (23, 25), 'mixamorig:RightUpLeg': (24, 26),
-                'mixamorig:LeftLeg': (25, 27), 'mixamorig:RightLeg': (26, 28), 
-                'mixamorig:LeftFoot': (27, 31), 'mixamorig:RightFoot': (28, 32),
-                'mixamorig:LeftToeBase': (29, 31), 'mixamorig:RightToeBase': (30, 32),
-                'mixamorig:LeftToe_End': (29, 31), 'mixamorig:RightToe_End': (30, 32)
+                'LeftShoulder': (12, 11), 'RightShoulder': (11, 12),
+                'LeftArm': (11, 13), 'RightArm': (12, 14),
+                'LeftForeArm': (13, 15), 'RightForeArm': (14, 16),
+                'LeftUpLeg' : (23, 25), 'RightUpLeg': (24, 26),
+                'LeftLeg': (25, 27), 'RightLeg': (26, 28), 
+                'LeftFoot': (27, 31), 'RightFoot': (28, 32),
+                'LeftToeBase': (29, 31), 'RightToeBase': (30, 32),
+                'LeftToe_End': (29, 31), 'RightToe_End': (30, 32)
                 }
 SPINE = {
-        'mixamorig:Hips': (23, 24, 11, 12), 'mixamorig:Spine': (23, 24, 11, 12),
-        'mixamorig:Spine1': (23, 24, 11, 12), 'mixamorig:Spine2': (23, 24, 11, 12)
+        'Hips': (23, 24, 11, 12), 'Spine': (23, 24, 11, 12),
+        'Spine1': (23, 24, 11, 12), 'Spine2': (23, 24, 11, 12)
         }
 
 
@@ -49,34 +49,34 @@ def rotate_bone(bone_vector: np.mat, bone) -> None:
 
 
 # set face and neck
-def set_face() -> None:
+def set_face(bone_title: str) -> None:
     
     ob = bpy.context.active_object
     md_face_vector = (VERTICES[3] + VERTICES[6])/2 - (VERTICES[7] + VERTICES[8])/2
-    right_shoulder_vector = np.array(ob.pose.bones['mixamorig:RightShoulder'].head - ob.pose.bones['mixamorig:Head'].head)
-    left_shoulder_vector = np.array(ob.pose.bones['mixamorig:LeftShoulder'].head - ob.pose.bones['mixamorig:Head'].head)
+    right_shoulder_vector = np.array(ob.pose.bones[bone_title + ':' + 'RightShoulder'].head - ob.pose.bones[bone_title + ':' + 'Head'].head)
+    left_shoulder_vector = np.array(ob.pose.bones[bone_title + ':' + 'LeftShoulder'].head - ob.pose.bones[bone_title + ':' + 'Head'].head)
     face_normal_vector = np.cross(right_shoulder_vector, left_shoulder_vector)
     cross_1 = np.cross(md_face_vector, face_normal_vector)
     
     if cross_1[2] < 0:
-        bone_roll('mixamorig:Neck', face_normal_vector, md_face_vector, 1, 'Y')
+        bone_roll(bone_title + ':' + 'Neck', face_normal_vector, md_face_vector, 1, 'Y')
     else:
-        bone_roll('mixamorig:Neck', face_normal_vector, md_face_vector, -1, 'Y')
+        bone_roll(bone_title + ':' + 'Neck', face_normal_vector, md_face_vector, -1, 'Y')
     if cross_1[0] > 0:
-        bone_roll('mixamorig:Head', face_normal_vector, md_face_vector, -1, 'X')
+        bone_roll(bone_title + ':' + 'Head', face_normal_vector, md_face_vector, -1, 'X')
     else:
-        bone_roll('mixamorig:Head', face_normal_vector, md_face_vector, 1, 'X')
+        bone_roll(bone_title + ':' + 'Head', face_normal_vector, md_face_vector, 1, 'X')
 
 
 # set spine
-def set_spine() -> None:
+def set_spine(bone_title: str) -> None:
     
     ob = bpy.context.active_object
     act_arm = bpy.context.object
 
     for (bone_name, index) in SPINE.items():
-        act_arm.data.edit_bones[bone_name].use_inherit_rotation = False
-        bone = ob.pose.bones[bone_name]
+        act_arm.data.edit_bones[bone_title + ':' + bone_name].use_inherit_rotation = False
+        bone = ob.pose.bones[bone_title + ':' + bone_name]
         point_1 = (VERTICES[index[0]] + VERTICES[index[1]])/2
         point_2 = (VERTICES[index[2]] + VERTICES[index[3]])/2
         mp_bone_vector = point_2 - point_1
@@ -84,47 +84,47 @@ def set_spine() -> None:
 
 
 # set arms, legs and feet
-def set_limbs() -> None:
+def set_limbs(bone_title: str) -> None:
     
     ob = bpy.context.active_object
     act_arm = bpy.context.object
     
     for (bone_name, index) in ARMS_LEGS_FOOT.items():
-        act_arm.data.edit_bones[bone_name].use_inherit_rotation = False
-        bone = ob.pose.bones[bone_name]
+        act_arm.data.edit_bones[bone_title + ':' + bone_name].use_inherit_rotation = False
+        bone = ob.pose.bones[bone_title + ':' + bone_name]
         mp_bone_vector = VERTICES[index[1]] - VERTICES[index[0]]
         rotate_bone(mp_bone_vector, bone)
 
 
-def set_hands() -> None:
+def set_hands(bone_title: str) -> None:
     
     ob = bpy.context.active_object
 
     # arm and wrist roll in left hand (note the order of vectors in cross product)
     md_left_wrist_index = VERTICES[19] - VERTICES[15]
     md_left_wrist_pinky = VERTICES[17] - VERTICES[15]
-    left_wrist_index = np.array((ob.pose.bones['mixamorig:LeftHandIndex4'].tail - ob.pose.bones['mixamorig:LeftHand'].tail))
-    left_wrist_pinky = np.array((ob.pose.bones['mixamorig:LeftHandPinky4'].tail - ob.pose.bones['mixamorig:LeftHand'].tail))
+    left_wrist_index = np.array((ob.pose.bones[bone_title + ':' + 'LeftHandIndex4'].tail - ob.pose.bones[bone_title + ':' + 'LeftHand'].tail))
+    left_wrist_pinky = np.array((ob.pose.bones[bone_title + ':' + 'LeftHandPinky4'].tail - ob.pose.bones[bone_title + ':' + 'LeftHand'].tail))
     # find normal vector to left palm from vertices obtained from mediapipe
     left_hand_normal_vector = np.cross(left_wrist_pinky, left_wrist_index)
     # find normal vector to left palm from vertices obtained from armature
     md_left_hand_normal_vector = np.cross(md_left_wrist_pinky, md_left_wrist_index)
     # roll arm and hand bone
-    bone_roll('mixamorig:LeftHand', left_hand_normal_vector, md_left_hand_normal_vector, -1/2, 'Y')
-    bone_roll('mixamorig:LeftForeArm', left_hand_normal_vector, md_left_hand_normal_vector, -1/2, 'Y')
+    bone_roll(bone_title + ':' + 'LeftHand', left_hand_normal_vector, md_left_hand_normal_vector, -1/2, 'Y')
+    bone_roll(bone_title + ':' + 'LeftForeArm', left_hand_normal_vector, md_left_hand_normal_vector, -1/2, 'Y')
 
     # arm and wrist roll in right hand
     md_right_wrist_index = VERTICES[20] - VERTICES[16]
     md_right_wrist_pinky = VERTICES[18] - VERTICES[16]
-    right_wrist_index = np.array((ob.pose.bones['mixamorig:RightHandIndex4'].tail - ob.pose.bones['mixamorig:RightHand'].tail))
-    right_wrist_pinky = np.array((ob.pose.bones['mixamorig:RightHandPinky4'].tail - ob.pose.bones['mixamorig:RightHand'].tail))
+    right_wrist_index = np.array((ob.pose.bones[bone_title + ':' + 'RightHandIndex4'].tail - ob.pose.bones[bone_title + ':' + 'RightHand'].tail))
+    right_wrist_pinky = np.array((ob.pose.bones[bone_title + ':' + 'RightHandPinky4'].tail - ob.pose.bones[bone_title + ':' + 'RightHand'].tail))
     # find normal vector to right palm from vertices obtained from mediapipe
     right_hand_normal_vector = np.cross(right_wrist_index, right_wrist_pinky)
     # find normal vector to right palm from vertices obtained from armature
     md_right_hand_normal_vector = np.cross(md_right_wrist_index, md_right_wrist_pinky)
 
-    bone_roll('mixamorig:RightHand', right_hand_normal_vector, md_right_hand_normal_vector, 1/2, 'Y')
-    bone_roll('mixamorig:RightForeArm', right_hand_normal_vector, md_right_hand_normal_vector, 1/2, 'Y')
+    bone_roll(bone_title + ':' + 'RightHand', right_hand_normal_vector, md_right_hand_normal_vector, 1/2, 'Y')
+    bone_roll(bone_title + ':' + 'RightForeArm', right_hand_normal_vector, md_right_hand_normal_vector, 1/2, 'Y')
 
 
 # making pose from the given vertices
@@ -140,21 +140,22 @@ def armature_pose(import_fbx_path: str, export_fbx_path) -> bool:
 
     # validating amrature for mixamo rig
     ob = bpy.context.active_object
-    if ob.pose.bones[0].name != 'mixamorig:Hips':
+    if ob.pose.bones[0].name.split(':')[-1] != 'Hips':
         return False
 
+    bone_title = ob.pose.bones[0].name.split(':')[0]
     # toggle to EDIT mode
     bpy.ops.object.mode_set(mode='EDIT')
     # set face and neck
-    set_face()
+    set_face(bone_title)
     # set spine
-    set_spine()
+    set_spine(bone_title)
     # set limbs
-    set_limbs()
+    set_limbs(bone_title)
     # toggle to POSE mode
     bpy.ops.object.mode_set(mode='POSE')
     # set hands
-    set_hands()
+    set_hands(bone_title)
     
     # toggle to OBJECT mode
     bpy.ops.object.mode_set(mode='OBJECT')

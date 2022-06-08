@@ -131,3 +131,4 @@ dmypy.json
 # Blender files
 *.fbx
 *.obj
+*.blend
