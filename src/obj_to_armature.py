@@ -14,11 +14,19 @@ ARMS_LEGS_FOOT = {
                 'LeftToeBase': (29, 31), 'RightToeBase': (30, 32),
                 'LeftToe_End': (29, 31), 'RightToe_End': (30, 32)
                 }
+                
 SPINE = {
         'Hips': (23, 24, 11, 12), 'Spine': (23, 24, 11, 12),
         'Spine1': (23, 24, 11, 12), 'Spine2': (23, 24, 11, 12)
         }
 
+CONNECTED_BONES = [
+            'Spine', 'Spine1', 'Spine2',
+            'RightArm', 'RightForeArm', 'RightForeArm',
+            'LeftArm', 'LeftForeArm', 'LeftForeArm',
+            'RightLeg', 'RightFoot', 'RightToeBase', 'RightToe_End',
+            'LeftLeg', 'LeftFoot', 'LeftToeBase', 'LeftToe_End',
+        ]
 
 # roll bone with the angle between 2 vectors
 def bone_roll(bone_name: str, vector1: np.mat, vector2: np.mat, direction: int, axis: str) -> None:
@@ -146,6 +154,10 @@ def armature_pose(import_fbx_path: str, export_fbx_path) -> bool:
     bone_title = ob.pose.bones[0].name.split(':')[0]
     # toggle to EDIT mode
     bpy.ops.object.mode_set(mode='EDIT')
+
+    for bone_name in CONNECTED_BONES:
+        bone = ob.data.edit_bones[bone_title + ':' + bone_name]
+        bone.use_connect = True
     # set face and neck
     set_face(bone_title)
     # set spine

@@ -93,6 +93,17 @@ The command invokes the above python script through `Blender`, which is executed
 ```
 
 ![OBJ to Armature Pose Transformation](/images/Part2.png?raw=true)
+## Limiations and Challenges
+
+- This script perfectly applies pose transformation only on **Mixamo Armatures**, only when the initial pose
+    should be identical the Mixamo Rest Pose (T-pose).
+- Pose Images in **Part 1** should neither contain poses that are extremely out of
+    out of proportion not should they have high perspectives. An ideal pose for this
+    project is when the body and the face is facing towards the front.
+- Incase, the boundaries of these limitations are breached, there might be some
+    observable distortions in meshes and unexplained rotations of bones.
+
+![Sample Cases](/images/limitations.png?raw=true)
 
 ## Authors
 
@@ -102,8 +113,10 @@ The command invokes the above python script through `Blender`, which is executed
 
 ## Other Links
 
-[![Twitter URL](https://img.shields.io/twitter/url?label=3dify.me&style=plastic&url=https%3A%2F%2F3dify.me%2F)](https://3dify.me/)
+[![Website](https://img.shields.io/twitter/url?label=3dify.me&style=plastic&url=https%3A%2F%2F3dify.me%2F)](https://3dify.me/)
 
 [![Instagram](https://img.shields.io/twitter/url?label=Instagram%20%403dify.me&style=plastic&url=https%3A%2F%2F3dify.me%2F)](https://www.instagram.com/3dify.me/)
+
+[![Blog](https://img.shields.io/twitter/url?label=Blog&style=plastic&url=https%3A%2F%2F3dify.me%2Fblog%2F)](https://3dify.me/blog/)
 
 [![Twitter](https://img.shields.io/twitter/follow/3difyMe?style=social)](https://twitter.com/3difyMe)
