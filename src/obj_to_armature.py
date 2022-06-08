@@ -128,7 +128,7 @@ def set_hands() -> None:
 
 
 # making pose from the given vertices
-def armature_pose(import_fbx_path: str, export_fbx_path) -> None:
+def armature_pose(import_fbx_path: str, export_fbx_path) -> bool:
 
     # delete all objects before importing
     bpy.ops.object.mode_set(mode='OBJECT')
@@ -137,6 +137,11 @@ def armature_pose(import_fbx_path: str, export_fbx_path) -> None:
     # import .fbx file to add pose
     src_obj = bpy.ops.import_scene.fbx(filepath = import_fbx_path)
     selected_obj = bpy.context.active_object
+
+    # validating amrature for mixamo rig
+    ob = bpy.context.active_object
+    if ob.pose.bones[0].name != 'mixamorig:Hips':
+        return False
 
     # toggle to EDIT mode
     bpy.ops.object.mode_set(mode='EDIT')
@@ -157,6 +162,8 @@ def armature_pose(import_fbx_path: str, export_fbx_path) -> None:
     # export .fbx file
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.export_scene.fbx(filepath=export_fbx_path, use_selection=True, object_types={'MESH', 'ARMATURE'}, add_leaf_bones=False)
+    
+    return True
 
 
 # driver code
@@ -177,7 +184,11 @@ if __name__ == "__main__":
                     VERTICES[i][0], VERTICES[i][1], VERTICES[i][2] = x, y, z
                     i = i+1
 
-        armature_pose(fbx_path, export_path)
+        if armature_pose(fbx_path, export_path):
+            print('\n++++ Part 2: Posed FBX written to ' + export_path)
+        else:
+            print('\ninvalid armature: only mixamo rig supported')
+            print('++++ Part 2: operation failed')
 
     except FileNotFoundError: 
         print('.obj file not found')

@@ -27,4 +27,3 @@ if __name__ == '__main__':
 
         blender_invoke_command = '"' + blender_path + '"' + ' --background --python ' + 'src/obj_to_armature.py ' + import_fbx_path + ' ' + export_fbx_path + ' ' + obj_path
         os.system(blender_invoke_command)
-        print('\n++++ Part 2: Posed FBX written to ' + export_fbx_path)

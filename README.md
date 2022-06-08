@@ -1,6 +1,5 @@
 
-[![3Difyme](https://3dify.me/images/logo.png)](https://3dify.me/)
-
+[![3Difyme](/images/logo.png?raw=true)](https://3dify.me/)
 
 
 # Image-To-Pose Converter
@@ -66,6 +65,34 @@ python main.py <IMG_PATH> <INPUT_FBX_PATH> <OUTPUT_FBX_PATH>
 **NOTE:** There should be two additional files post execution with the following extensions:
 - `.obj` file: An intermediate Mediapipe mesh obtained in **Part 1** operation.
 - `.fbx` file: Final posed armature obtained in **Part 2** operation.
+
+## Part 1 Implementation
+
+Script: `src/image_to_obj.py`
+
+`create_obj(img, obj_path)` function takes inputs as the pose image and file path
+for the mediapipe mesh. The obtained `.obj` file at the given path contains landmarks
+at all vertices.
+
+![Image to OBJ Transformation](/images/Part1.png?raw=true)
+
+## Part 2 Implementation
+
+Script: `src/obj_to_armature.py`
+
+The command invokes the above python script through `Blender`, which is executed in `main.py` script.
+
+**Arguments:**
+
+- `import_fbx_path`: Path to an `.fbx` file which should contain one **Mixamo Armature** in Rest Pose.
+- `export_fbx_path`: Path to the final `.fbx` file after new pose is applied to the Mixamo Armature.
+- `obj_path`: Path to the `.obj` file obtained in **Part 1**.
+
+```
+"<BLENDER_PATH>" --background --python src/obj_to_armature.py <import_fbx_path> <export_fbx_path> <obj_path>
+```
+
+![OBJ to Armature Pose Transformation](/images/Part2.png?raw=true)
 
 ## Authors
 
