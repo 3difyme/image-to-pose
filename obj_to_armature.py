@@ -154,7 +154,8 @@ def armaturePose(import_fbx_path: str, export_fbx_path) -> None:
     bpy.ops.object.mode_set(mode='OBJECT')
 
     # export .fbx file
-    bpy.ops.export_scene.fbx(filepath=export_fbx_path, add_leaf_bones=False)
+    bpy.ops.object.select_all(action='SELECT')
+    bpy.ops.export_scene.fbx(filepath=export_fbx_path, use_selection=True, object_types={'MESH', 'ARMATURE'}, add_leaf_bones=False)
 
 
 # driver code
